@@ -1,9 +1,14 @@
 <?php
+<<<<<<< HEAD
 // Database credentials
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "miniproject"; // Your database name
+=======
+// Database connection
+require 'connection.php';
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 
 // Connect to MySQL database
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -32,12 +37,50 @@ $combinations = array(
 );
 
 $deptcombinations = array(
+<<<<<<< HEAD
     array("dept" => 'IT'), array("dept" => 'CSE'),array("dept" => 'CE'), array("dept" => 'EEE') , array("dept" => 'ECE')
 );
 
 $semcombinations = array(
     array("sem" => 'o'), array("sem" => 'e')
 );
+=======
+    array("dept" => 'IT'), array("dept" => 'CSE')
+);
+
+$semcombinations = array(
+    array("sem" => 'o')
+);
+// array("sem" => 'e')
+foreach ($deptcombinations as $deptcombination) {
+    $dept = $deptcombination['dept'];
+    foreach ($semcombinations as $semcombination) {
+        $semester = $semcombination['sem'];
+        // Iterate over each unique combination of year
+        foreach ($combinations as $combination) {
+            $year = $combination['year'];
+            // Loop until there are no empty subjects
+            // while (checkForEmptySubjects($year, $semester, $dept, $conn)) {
+            // Set all subject fields in classtable to ''
+            $sql_update_subject_empty = "UPDATE classtable SET subject = '', teacher = '' WHERE year = $year AND sem = '$semester' AND dept='$dept'";
+            if ($conn->query($sql_update_subject_empty) === FALSE) {
+                echo "Error updating subject field in classtable: " . $conn->error;
+                continue; // Move to the next combination
+            }
+            // Update classtable with REM teacher and allocate REM subjects
+            allocateREM($year, $semester, $dept, $conn);
+
+            // Allocate labs
+            allocateLabs($year, $semester, $dept, $conn);
+
+            // // Allocate other subjects
+            // allocateOtherSubjectsAndTeachers($year, $semester, $dept, $conn);
+            // }
+        }
+    }
+}
+
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 foreach ($deptcombinations as $deptcombination) {
     $dept = $deptcombination['dept'];
     foreach ($semcombinations as $semcombination) {
@@ -47,6 +90,7 @@ foreach ($deptcombinations as $deptcombination) {
             $year = $combination['year'];
             // Loop until there are no empty subjects
             while (checkForEmptySubjects($year, $semester, $dept, $conn)) {
+<<<<<<< HEAD
 
                 // Set all subject fields in classtable to ''
                 $sql_update_subject_empty = "UPDATE classtable SET subject = '', teacher = '' WHERE year = $year AND sem = '$semester' AND dept='$dept'";
@@ -78,6 +122,42 @@ foreach ($deptcombinations as $deptcombination) {
     }
 }
 header("Location: input.php");
+=======
+                // Set all subject fields in classtable to ''
+                // $sql_update_subject_empty = "UPDATE classtable SET subject = '', teacher = '' WHERE year = $year AND sem = '$semester' AND dept='$dept'";
+                // if ($conn->query($sql_update_subject_empty) === FALSE) {
+                //     echo "Error updating subject field in classtable: " . $conn->error;
+                //     continue; // Move to the next combination
+                // }
+                // Update classtable with REM teacher and allocate REM subjects
+                // allocateREM($year, $semester, $dept, $conn);
+
+                // // Allocate labs
+                // allocateLabs($year, $semester, $dept, $conn);
+
+                // // Allocate other subjects
+                allocateOtherSubjectsAndTeachers($year, $semester, $dept, $conn);
+            }
+        }
+    }
+}
+// foreach ($deptcombinations as $deptcombination) {
+//     $dept = $deptcombination['dept'];
+//     foreach ($semcombinations as $semcombination) {
+//         $semester = $semcombination['sem'];
+//         // Iterate over each unique combination of year
+//         foreach ($combinations as $combination) {
+//             $year = $combination['year'];
+//             // Loop until there are no empty subjects
+//             while (checkForEmptySubjects($year, $semester, $dept, $conn)) {
+//                 // Allocate other subjects
+//                 allocateOtherSubjectsAndTeachers($year, $semester, $dept, $conn);
+//             }
+//         }
+//     }
+// }
+header("Location: display.php");
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 // Function to allocate REM subjects
 function allocateREM($year, $semester, $dept, $conn)
 {
@@ -134,7 +214,11 @@ function allocateREM($year, $semester, $dept, $conn)
 }
 
 
+<<<<<<< HEAD
 // Function to allocate labs
+=======
+// Function to allocate labs// Function to allocate labs
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 function allocateLabs($year, $semester, $dept, $conn)
 {
     // Fetch labs from labs table
@@ -206,12 +290,30 @@ function allocateLabs($year, $semester, $dept, $conn)
                 // Check if all pnos in the combination are available
                 $allPnosAvailable = true;
                 foreach ($pnos as $pno) {
+<<<<<<< HEAD
+=======
+                    // Check if the pno is available in the current department
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                     $sql_check_availability = "SELECT * FROM classtable WHERE day = '$day' AND pno = '$pno' AND subject = '' AND year = $year AND sem = '$semester' AND dept='$dept'";
                     $result_check_availability = $conn->query($sql_check_availability);
                     if ($result_check_availability->num_rows == 0) {
                         $allPnosAvailable = false;
                         break;
                     }
+<<<<<<< HEAD
+=======
+
+                    // Check if the same teacher is assigned in other departments
+                    $sql_check_teacher_conflict = "SELECT * FROM classtable WHERE day = '$day' AND pno = '$pno' AND teacher = '$teacher' AND year = $year AND sem = '$semester' AND dept = '$dept' AND $year!= year";
+                    $result_check_teacher_conflict = $conn->query($sql_check_teacher_conflict);
+                    // Check if the same teacher is assigned in other departments
+                    $sql_check_teacher_conflict1 = "SELECT * FROM classtable WHERE day = '$day' AND pno = '$pno' AND teacher = '$teacher' AND year = $year AND sem = '$semester' AND dept != '$dept'";
+                    $result_check_teacher_conflict1 = $conn->query($sql_check_teacher_conflict1);
+                    if ($result_check_teacher_conflict->num_rows > 0 || $result_check_teacher_conflict1->num_rows > 0) {
+                        $allPnosAvailable = false;
+                        break;
+                    }
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                 }
 
                 // If all pnos are available, allocate the lab
@@ -240,6 +342,10 @@ function allocateLabs($year, $semester, $dept, $conn)
         echo "No labs found in the 'labs' table";
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 // Function to allocate other subjects and teachers
 function allocateOtherSubjectsAndTeachers($year, $semester, $dept, $conn)
 {
@@ -271,7 +377,11 @@ function allocateOtherSubjectsAndTeachers($year, $semester, $dept, $conn)
                 $subjectsArray[] = array("subject" => $subject, "teacher" => $data["teacher"]);
             }
         }
+<<<<<<< HEAD
 
+=======
+        // print_r($subjectsArray);
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
         // Update subjects and teachers in the classtable table
         allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $conn);
     } else {
@@ -318,6 +428,7 @@ function allocateOtherSubjectsAndTeachers($year, $semester, $dept, $conn)
 //     }
 // }
 // Function to allocate subjects and teachers to combinations
+<<<<<<< HEAD
 function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $conn)
 {
     $deptcombinations = array(
@@ -329,6 +440,19 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
     // Initialize an empty array to store which teachers have been assigned to each day and period combination
     $teachersAssigned = array();
 
+=======
+
+
+function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $conn)
+{
+    // Array to track the number of allocations per subject per day
+    $allocationsPerSubjectPerDay = array();
+
+    // Array to store which teachers have been assigned to each day and period combination
+    $teachersAssigned = array();
+
+    // Previous subject and teacher to check consecutive allocations
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
     $prevSubject = null;
     $prevTeacher = null;
     $consecutiveCount = 0;
@@ -347,9 +471,12 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
         // Shuffle the subjects array to randomize the order
         shuffle($subjectsArray);
 
+<<<<<<< HEAD
         // Initialize an empty array to keep track of allocated teachers for the current day and period
         $allocatedTeachers = array();
 
+=======
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
         // Iterate through the shuffled subjects array
         foreach ($subjectsArray as $key => $subjectData) {
             $subject = $subjectData['subject'];
@@ -359,12 +486,16 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
             if (!isset($teachersAssigned[$day][$pno][$teacher])) {
                 // Check if the subject has already been allocated twice on the current day
                 if (!isset($allocationsPerSubjectPerDay[$day][$subject]) || $allocationsPerSubjectPerDay[$day][$subject] < 2) {
+<<<<<<< HEAD
                     // displayTimetable($year, $semester, $conn);
+=======
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                     // Fetch the corresponding teacher for the subject of the current day and period combination in other years
                     if ($prevSubject !== null && $subject === $prevSubject) {
                         continue; // Skip the current subject if it's the same as the previously allocated subject
                     }
 
+<<<<<<< HEAD
 
 
                     // Fetch all departments from the dept table
@@ -377,6 +508,15 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
                     //         $dept_name = $dept_row['dept'];
 
 
+=======
+                    // Check for departmental combinations
+                    $deptcombinations = array(
+                        array("dept" => 'IT'),
+                        array("dept" => 'CSE')
+                    );
+
+                    // Check for subject clash
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                     for ($i = 1; $i <= 4; $i++) {
                         foreach ($deptcombinations as $deptcombination) {
                             $dept_name = $deptcombination['dept'];
@@ -384,11 +524,17 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
                                 continue; // Skip the current year
                             }
 
+<<<<<<< HEAD
                             $sql_select_teacher_other_year = "SELECT teacher FROM classtable WHERE day = '$day' AND pno = $pno AND year = $i AND sem = '$semester' AND dept= '$dept_name'";
+=======
+                            // Check if the teacher is the same in other years
+                            $sql_select_teacher_other_year = "SELECT teacher FROM classtable WHERE day = '$day' AND pno = $pno AND year = $i AND sem = '$semester' AND dept = '$dept_name'";
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                             $result_select_teacher_other_year = $conn->query($sql_select_teacher_other_year);
                             if ($result_select_teacher_other_year->num_rows > 0) {
                                 $row_other_year = $result_select_teacher_other_year->fetch_assoc();
                                 $teacher_other_year = $row_other_year['teacher'];
+<<<<<<< HEAD
                                 // echo "\n,$teacher_other_year ";
                                 // echo $teacher;
                                 // Check if the teacher in other years is the same as the current teacher
@@ -454,11 +600,28 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
                     if ($prevTeacher !== $teacher || $prevSubject !== $subject) {
                         // Check if the combination is available
                         $sql_check_availability = "SELECT * FROM classtable WHERE day = '$day' AND pno = '$pno' AND subject = '' AND teacher = '' AND year = $year AND sem = '$semester' AND dept='$dept'";
+=======
+                                if ($teacher_other_year === $teacher) {
+                                    continue 3; // Skip this allocation and move to the next subject
+                                }
+                            }
+                        }
+                    }
+
+                    // Attempt to allocate the subject and teacher to the current day and period
+                    if ($prevTeacher !== $teacher || $prevSubject !== $subject) {
+                        // Check if the combination is available
+                        $sql_check_availability = "SELECT * FROM classtable WHERE day = '$day' AND pno = $pno AND subject = '' AND teacher = '' AND year = $year AND sem = '$semester' AND dept = '$dept'";
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                         $result_check_availability = $conn->query($sql_check_availability);
 
                         if ($result_check_availability->num_rows > 0) {
                             // Update classtable with the current subject and teacher
+<<<<<<< HEAD
                             $sql_update_classtable_subject_teacher = "UPDATE classtable SET subject = '$subject', teacher = '$teacher' WHERE day = '$day' AND pno = '$pno' AND year = $year AND sem = '$semester' AND dept='$dept'";
+=======
+                            $sql_update_classtable_subject_teacher = "UPDATE classtable SET subject = '$subject', teacher = '$teacher' WHERE day = '$day' AND pno = $pno AND year = $year AND sem = '$semester' AND dept = '$dept'";
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 
                             if ($conn->query($sql_update_classtable_subject_teacher) === FALSE) {
                                 echo "Error updating subject and teacher data in classtable: " . $conn->error;
@@ -475,10 +638,19 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
 
                                 $prevSubject = $subject;
                                 $prevTeacher = $teacher;
+<<<<<<< HEAD
                                 // Remove the allocated subject from the subjects array
                                 unset($subjectsArray[$key]);
 
                                 break; // Break the inner loop after successfully allocating the subject
+=======
+
+                                // Remove the allocated subject from the subjects array
+                                unset($subjectsArray[$key]);
+
+                                // Break the inner loop after successfully allocating the subject
+                                break;
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                             }
                         }
                     } else {
@@ -494,17 +666,58 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
                 }
             }
         }
+<<<<<<< HEAD
     }
 
     // Display an error message if there are subjects that could not be allocated
     if (!empty($subjectsArray)) {
         echo "Error: Some subjects could not be allocated due to insufficient available slots.";
+=======
+
+        // Display an error message if there are subjects that could not be allocated
+        if (!empty($subjectsArray)) {
+            echo "Error: Some subjects could not be allocated due to insufficient available slots.";
+            // Debug: Print remaining subjects and allCombinations
+            // print_r($subjectsArray);
+            // print_r($allCombinations);
+         
+        }
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
     }
 
     // Display the timetable after allocation
     // displayTimetable($year, $semester, $conn);
 }
 
+<<<<<<< HEAD
+=======
+
+// Function to fetch remaining day and period combinations for allocation retry
+// function getRemainingCombinations($year, $semester, $dept, $conn)
+// {
+//     $remainingCombinations = array();
+
+//     // Example SQL query to fetch remaining day and period combinations
+//     $sql_remaining_combinations = "SELECT day, pno FROM classtable 
+//                                    WHERE subject = '' AND teacher = '' 
+//                                    AND year = $year AND sem = '$semester' 
+//                                    AND dept = '$dept'";
+
+//     $result_remaining_combinations = $conn->query($sql_remaining_combinations);
+
+//     if ($result_remaining_combinations->num_rows > 0) {
+//         while ($row = $result_remaining_combinations->fetch_assoc()) {
+//             $remainingCombinations[] = array(
+//                 'day' => $row['day'],
+//                 'pno' => $row['pno']
+//             );
+//         }
+//     }
+
+//     return $remainingCombinations;
+// }
+
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 // Function to fetch all combinations of day and period for the current semester
 function getAllCombinations($year, $semester, $dept, $conn)
 {

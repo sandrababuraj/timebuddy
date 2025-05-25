@@ -28,6 +28,7 @@
                         die("Connection failed: " . $conn->connect_error);
                     }
                     // Fetch semester value from input table
+<<<<<<< HEAD
                     $sql_select_semester = "SELECT sem FROM input";
                     $result_select_semester = $conn->query($sql_select_semester);
 
@@ -38,6 +39,19 @@
                         echo "No semester data found in the 'input' table";
                         exit; // Exit the script if semester data is not found
                     }
+=======
+                    // $sql_select_semester = "SELECT sem FROM input";
+                    // $result_select_semester = $conn->query($sql_select_semester);
+
+                    // if ($result_select_semester->num_rows > 0) {
+                    //     $row = $result_select_semester->fetch_assoc();
+                    //     $sem = $row['sem'];
+                    // } else {
+                    //     echo "No semester data found in the 'input' table";
+                    //     exit; // Exit the script if semester data is not found
+                    // }
+                    $sem = 'o';
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                     $sql_select_dept = "SELECT dept FROM input";
                     $result_select_dept = $conn->query($sql_select_dept);
 
@@ -48,12 +62,17 @@
                         echo "No dept data found in the 'input' table";
                         exit; // Exit the script if semester data is not found
                     }
+<<<<<<< HEAD
                     //         $sql_truncate_input = "TRUNCATE TABLE input";
                     // if ($conn->query($sql_truncate_input) === FALSE) {
                     //     echo "Error truncating input table: " . $conn->error;
                     // }
 
                     // $sql_select_class = "SELECT class FROM input";
+=======
+                    // Fetch class value from input table
+                    // $sql_select_semester = "SELECT class FROM input";
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                     // $result_select_class = $conn->query($sql_select_class);
 
                     // if ($result_select_class->num_rows > 0) {
@@ -63,12 +82,30 @@
                     //     echo "No class data found in the 'input' table";
                     //     exit; // Exit the script if semester data is not found
                     // }
+<<<<<<< HEAD
                     $combinations = array(
                         array("year" => 1),
                         array("year" => 2),
                         array("year" => 3),
                         array("year" => 4)
                     );
+=======
+                    if ($sem = 'o') {
+                        $combinations = array(
+                            array("year" => 1, "class" => 'S1'),
+                            array("year" => 2, "class" => 'S3'),
+                            array("year" => 3, "class" => 'S5'),
+                            array("year" => 4, "class" => 'S7')
+                        );
+                    } else {
+                        $combinations = array(
+                            array("year" => 1, "class" => 'S2'),
+                            array("year" => 2, "class" => 'S4'),
+                            array("year" => 3, "class" => 'S6'),
+                            array("year" => 4, "class" => 'S8')
+                        );
+                    }
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 
                     // Check if the form was submitted to update the classtable
                     if (isset($_POST['teachertable'])) {
@@ -88,7 +125,11 @@
                         }
                     }
                     if (isset($_POST['exportExcel'])) {
+<<<<<<< HEAD
                         header("Location: demo.php");
+=======
+                        header("Location: input.php");
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                     }
                     if (isset($_POST['new'])) {
                         header("Location: truncate.php");
@@ -97,7 +138,12 @@
                     // Iterate over each unique combination of year
                     foreach ($combinations as $combination) {
                         $year = $combination['year'];
+<<<<<<< HEAD
                         echo "<h2>Timetable for Year $year, Semester $sem:</h2>";
+=======
+                        $class = $combination['class'];
+                        echo "<h2>Timetable for Class $class</h2>";
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                         echo "<table border='1'>";
                         echo "<tr>";
                         echo "<th>Day/Period</th>";
@@ -128,6 +174,7 @@
                                 $sql_select_subject = "SELECT subject, teacher FROM classtable WHERE day = '$day' AND pno = $pno AND year = $year AND sem = '$sem' AND dept='$dept'";
                                 $result_select_subject = $conn->query($sql_select_subject);
 
+<<<<<<< HEAD
                                 // if ($result_select_subject->num_rows > 0) {
                                 //     $row = $result_select_subject->fetch_assoc();
                                 //     $subject = $row['subject'];
@@ -151,19 +198,60 @@
                                 //     echo "<td></td>";
                                 // }
 
+=======
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                                 if ($result_select_subject->num_rows > 0) {
                                     $row = $result_select_subject->fetch_assoc();
                                     $subject = $row['subject'];
                                     $teacher = $row['teacher'];
+<<<<<<< HEAD
                                     echo "<td>$subject ($teacher)</td>";
                                 } else {
                                     echo "<td></td>";
                                 }
+=======
+                                    // Check if the same subject has corresponding teacher value in the same day and pno combination of another year
+                                    $sql_check_teacher_in_other_year = "SELECT COUNT(*) AS count FROM classtable WHERE day = '$day' AND pno = $pno AND teacher = '$teacher' AND sem = '$sem' AND dept ='$dept' AND year != $year ";
+                                    $result_check_teacher_in_other_year = $conn->query($sql_check_teacher_in_other_year);
+                                    $row_check_teacher_in_other_year = $result_check_teacher_in_other_year->fetch_assoc();
+                                    $count = $row_check_teacher_in_other_year['count'];
+
+                                    $sql_check_teacher_in_other_dept = "SELECT COUNT(*) AS count1 FROM classtable WHERE day = '$day' AND pno = $pno AND teacher = '$teacher' AND sem = '$sem' AND dept !='$dept' ";
+                                    $result_check_teacher_in_other_dept = $conn->query($sql_check_teacher_in_other_dept);
+                                    $row_check_teacher_in_other_dept = $result_check_teacher_in_other_dept->fetch_assoc();
+                                    $count1 = $row_check_teacher_in_other_dept['count1'];
+                                    // If count > 0, set background color
+                                    if ($count > 0 || $count1 > 0) {
+                                        echo "<td style='background-color: lightgreen; color:black;'>$subject ($teacher)</td>";
+                                    }
+                                    
+                                   else if (in_array($subject, $labs)) {
+                                        echo "<td style='background-color: lightblue; color:black;'>$subject ($teacher)</td>";
+                                    } else {
+                                        echo "<td>$subject ($teacher)</td>";
+                                    }
+                                } else {
+                                    echo "<td></td>";
+                                }
+
+                                // if ($result_select_subject->num_rows > 0) {
+                                //     $row = $result_select_subject->fetch_assoc();
+                                //     $subject = $row['subject'];
+                                //     $teacher = $row['teacher'];
+                                //     echo "<td>$subject ($teacher)</td>";
+                                // } else {
+                                //     echo "<td></td>";
+                                // }
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                             }
                             echo "</tr>";
                         }
 
                         echo "</table>";
+<<<<<<< HEAD
+=======
+                        
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
                     }
                     ?>
                 </div>

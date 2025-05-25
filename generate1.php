@@ -29,10 +29,18 @@ $combinations = array(
 );
 
 $deptcombinations = array(
+<<<<<<< HEAD
     array("dept" => 'IT'), array("dept" => 'CSE'),array("dept" => 'CE'), array("dept" => 'EEE') , array("dept" => 'ECE')
 );
 $semcombinations = array(
     array("sem" => 'o')
+=======
+    array("dept" => 'IT'), array("dept" => 'CSE')
+);
+
+$semcombinations = array(
+    array("sem" => 'e')
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 );
 // array("sem" => 'e')
 foreach ($deptcombinations as $deptcombination) {
@@ -105,7 +113,11 @@ foreach ($deptcombinations as $deptcombination) {
 //         }
 //     }
 // }
+<<<<<<< HEAD
 header("Location: input.php");
+=======
+header("Location: display.php");
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 // Function to allocate REM subjects
 function allocateREM($year, $semester, $dept, $conn)
 {
@@ -361,8 +373,14 @@ function allocateOtherSubjectsAndTeachers($year, $semester, $dept, $conn)
 // Function to allocate subjects and teachers to combinations
 function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $conn)
 {
+<<<<<<< HEAD
     $deptcombinations = array(
         array("dept" => 'IT'), array("dept" => 'CSE'),array("dept" => 'CE'), array("dept" => 'EEE') , array("dept" => 'ECE')
+=======
+    while (!empty($subjectsArray)) {
+    $deptcombinations = array(
+        array("dept" => 'IT'), array("dept" => 'CSE')
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
     );
     // Initialize an empty array to keep track of the number of allocations per subject per day
     $allocationsPerSubjectPerDay = array();
@@ -376,7 +394,11 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
 
     // Fetch all combinations of day and period for the current semester
     $allCombinations = getAllCombinations($year, $semester, $dept, $conn);
+<<<<<<< HEAD
 
+=======
+    print_r($subjectsArray);
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
     foreach ($allCombinations as $index => $combination) {
         if (empty($subjectsArray)) {
             break; // Break if there are no more subjects to allocate
@@ -536,11 +558,20 @@ function allocateSubjectsAndTeachers($subjectsArray, $year, $semester, $dept, $c
             }
         }
     }
+<<<<<<< HEAD
 
     // Display an error message if there are subjects that could not be allocated
     if (!empty($subjectsArray)) {
         echo "Error: Some subjects could not be allocated due to insufficient available slots.";
     }
+=======
+    }
+    // // Display an error message if there are subjects that could not be allocated
+    // if (!empty($subjectsArray)) {
+    //     echo "Error: Some subjects could not be allocated due to insufficient available slots.";
+
+    // }
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 
     // Display the timetable after allocation
     // displayTimetable($year, $semester, $conn);

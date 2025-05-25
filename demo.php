@@ -4,6 +4,11 @@ require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+
+
 // Database connection
 $host = 'localhost';
 $db = 'timebuddy';
@@ -37,6 +42,13 @@ if (!$row) {
 $sem = $row['sem'];
 $dept = $row['dept'];
 
+<<<<<<< HEAD
+=======
+// Truncate the input table
+$sql_truncate_input = "TRUNCATE TABLE input";
+$pdo->exec($sql_truncate_input);
+
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 // Define the years to filter by
 $years = [1, 2, 3, 4]; // Year values
 
@@ -44,6 +56,17 @@ $years = [1, 2, 3, 4]; // Year values
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
+<<<<<<< HEAD
+=======
+// Set default styles
+$defaultStyle = [
+    'alignment' => [
+        'horizontal' => Alignment::HORIZONTAL_CENTER,
+        'vertical' => Alignment::VERTICAL_CENTER,
+    ],
+];
+
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 // Set the row headers for the timetable (days)
 $dayMap = [
     'MON' => 'Monday',
@@ -64,6 +87,10 @@ foreach ($years as $year) {
 
     // Set the title for the year and semester
     $sheet->setCellValue('A' . $startRow, "Year: $year, Semester: $sem, Department: $dept");
+<<<<<<< HEAD
+=======
+    $sheet->getStyle('A' . $startRow)->applyFromArray($defaultStyle); // Apply default style
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
     $startRow++;
 
     // Set the column headers for the periods
@@ -71,6 +98,11 @@ foreach ($years as $year) {
     $columnIndex = 'B';
     for ($period = 1; $period <= 6; $period++) { // Assuming 6 periods per day
         $sheet->setCellValue($columnIndex . $startRow, 'P' . $period);
+<<<<<<< HEAD
+=======
+        $sheet->getStyle($columnIndex . $startRow)->applyFromArray($defaultStyle); // Apply default style
+        $sheet->getColumnDimension($columnIndex)->setWidth(15); // Adjust column width
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
         $columnIndex++;
     }
     $startRow++;
@@ -92,9 +124,17 @@ foreach ($years as $year) {
     // Write the timetable array to the spreadsheet
     foreach ($dayMap as $shortDay => $fullDay) {
         $sheet->setCellValue('A' . $startRow, $fullDay);
+<<<<<<< HEAD
         $columnIndex = 'B';
         for ($period = 1; $period <= 6; $period++) {
             $sheet->setCellValue($columnIndex . $startRow, $timetable[$shortDay][$period]);
+=======
+        $sheet->getStyle('A' . $startRow)->applyFromArray($defaultStyle); // Apply default style
+        $columnIndex = 'B';
+        for ($period = 1; $period <= 6; $period++) {
+            $sheet->setCellValue($columnIndex . $startRow, $timetable[$shortDay][$period]);
+            $sheet->getStyle($columnIndex . $startRow)->applyFromArray($defaultStyle); // Apply default style
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
             $columnIndex++;
         }
         $startRow++;
@@ -104,6 +144,13 @@ foreach ($years as $year) {
     $startRow++;
 }
 
+<<<<<<< HEAD
+=======
+// Apply additional styles if needed
+// Example: Setting background color for specific cells
+$sheet->getStyle('B3:G8')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF0000'); // Red background for cells B3 to G8
+
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 // Export the spreadsheet
 $writer = new Xlsx($spreadsheet);
 $filename = 'timetable_sem_' . $sem . '.xlsx';
@@ -120,5 +167,8 @@ header('Pragma: public');
 
 ob_clean(); // Clear output buffer before sending spreadsheet
 $writer->save('php://output');
+<<<<<<< HEAD
 header("Location: display3.php");
+=======
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 exit;

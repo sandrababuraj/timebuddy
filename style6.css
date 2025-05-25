@@ -262,4 +262,13 @@ body {
 .error{
     font-size: 15px;
     color: red;
+<<<<<<< HEAD
+=======
+}
+.box{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-image: url("ora.jpg");
+    border-radius: 20px;
+>>>>>>> 829cc57d27bbbc599b0eac90369f3c83aa3162a8
 }
